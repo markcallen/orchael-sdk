@@ -53,7 +53,6 @@ cd examples/echo
 uv sync
 
 # Run the echo processor using the CLI
-cd ../..
 uv run orchael-sdk-cli --config config.yaml --input "Hello World"
 
 # Show chat history (note: each CLI call creates a new processor instance)
@@ -66,7 +65,7 @@ Run the test suite for this example:
 
 ```bash
 cd examples/echo
-uv install --dev
+uv sync --dev
 uv run pytest
 ```
 
