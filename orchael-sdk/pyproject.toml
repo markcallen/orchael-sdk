@@ -24,7 +24,9 @@ classifiers = [
 dependencies = [
     "typing-extensions>=4.0.0",
     "click>=8.0.0",
-    "PyYAML>=6.0.0"
+    "PyYAML>=6.0.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0"
 ]
 
 [project.optional-dependencies]
@@ -39,6 +41,7 @@ dev = [
 
 [project.scripts]
 orchael-sdk-cli = "orchael_sdk.cli:main"
+orchael-sdk-server = "orchael_sdk_cli_server:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -107,4 +110,6 @@ dev = [
     "pytest-cov>=6.2.1",
     "ruff>=0.12.10",
     "types-pyyaml>=6.0.12.20250822",
+    "httpx>=0.25.0",
+    "types-requests>=2.31.0",
 ]

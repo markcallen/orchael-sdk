@@ -1,0 +1,10 @@
+# Example configuration for Orchael SDK FastAPI server
+# This file should be placed in the same directory as where you run the server
+
+processor_class: "examples.echo.echo_processor.EchoChatProcessor"
+
+# Optional environment variables
+env:
+  API_KEY: "your-api-key-here"
+  MODEL_NAME: "gpt-4"
+  DEBUG: true
