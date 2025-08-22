@@ -13,12 +13,12 @@ echo_dir = Path(__file__).parent.parent / "echo_processor"
 sys.path.insert(0, str(echo_dir))
 
 try:
-    from echo_chat_processor import EchoChatProcessor
-    from orchael_sdk import ChatInput
+    from echo_chat_processor import EchoChatProcessor  # type: ignore[import-not-found]
+    from orchael_sdk import ChatInput  # type: ignore[import-not-found]
 except ImportError:
     # If orchael_sdk is not available, we'll skip these tests
-    EchoChatProcessor = None
-    ChatInput = None
+    EchoChatProcessor = None  # type: ignore[misc,assignment]
+    ChatInput = None  # type: ignore[misc,assignment]
 
 
 @pytest.mark.skipif(

@@ -4,7 +4,7 @@ Demo script for the Orchael SDK FastAPI server
 """
 
 import time
-import requests
+import requests  # type: ignore[import-untyped]
 import subprocess
 import sys
 from pathlib import Path

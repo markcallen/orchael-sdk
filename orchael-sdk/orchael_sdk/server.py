@@ -7,12 +7,12 @@ import importlib
 import os
 from typing import Type, Dict, Any, cast, List
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import uvicorn
+from fastapi import FastAPI, HTTPException  # type: ignore[import-not-found]
+from pydantic import BaseModel  # type: ignore[import-not-found]
+import uvicorn  # type: ignore[import-not-found]
 
 try:
-    import yaml
+    import yaml  # type: ignore[import-untyped]
 except ImportError:
     raise ImportError("PyYAML is required. Install with: pip install PyYAML")
 

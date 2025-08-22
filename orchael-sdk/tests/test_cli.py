@@ -4,7 +4,7 @@ Tests for CLI module
 
 import os
 import tempfile
-import yaml
+import yaml  # type: ignore[import-untyped]
 from unittest.mock import patch, MagicMock
 
 from orchael_sdk.cli import (

@@ -13,12 +13,12 @@ current_dir = Path(__file__).parent
 sys.path.insert(0, str(current_dir))
 
 try:
-    from ollama_processor import OllamaChatProcessor
-    from orchael_sdk import ChatInput
+    from ollama_processor import OllamaChatProcessor  # type: ignore[import-not-found]
+    from orchael_sdk import ChatInput  # type: ignore[import-not-found]
 except ImportError:
     # If orchael_sdk is not available, we'll skip these tests
-    OllamaChatProcessor = None
-    ChatInput = None
+    OllamaChatProcessor = None  # type: ignore[misc,assignment]
+    ChatInput = None  # type: ignore[misc,assignment]
 
 
 @pytest.mark.skipif(

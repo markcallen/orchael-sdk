@@ -109,4 +109,6 @@ dev = [
     "types-pyyaml>=6.0.12.20250822",
     "httpx>=0.25.0",
     "types-requests>=2.31.0",
+    "types-requests>=2.31.0",
+    "pydantic>=2.0.0",
 ]

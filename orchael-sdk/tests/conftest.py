@@ -17,7 +17,7 @@ def temp_config_file() -> Generator[str, None, None]:
     }
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-        import yaml
+        import yaml  # type: ignore[import-untyped]
 
         yaml.dump(config_data, f)
         config_file = f.name

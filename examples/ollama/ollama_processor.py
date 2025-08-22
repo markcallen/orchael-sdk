@@ -4,10 +4,10 @@ Ollama implementation of OrchaelChatProcessor
 
 import os
 from typing import List
-from orchael_sdk import OrchaelChatProcessor, ChatInput, ChatOutput, ChatHistoryEntry
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import HumanMessage, AIMessage
-from langchain_ollama import ChatOllama
+from orchael_sdk import OrchaelChatProcessor, ChatInput, ChatOutput, ChatHistoryEntry  # type: ignore[import-not-found]
+from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder  # type: ignore[import-not-found]
+from langchain_core.messages import HumanMessage, AIMessage  # type: ignore[import-not-found]
+from langchain_ollama import ChatOllama  # type: ignore[import-not-found]
 
 
 class OllamaChatProcessor(OrchaelChatProcessor):
@@ -46,8 +46,9 @@ class OllamaChatProcessor(OrchaelChatProcessor):
     def process_chat(self, chat_input: ChatInput) -> ChatOutput:
         # Convert history to LangChain message format
         messages = []
-        if chat_input.get("history"):
-            for entry in chat_input["history"]:
+        history = chat_input.get("history")
+        if history:
+            for entry in history:
                 messages.append(HumanMessage(content=entry["input"]))
                 messages.append(AIMessage(content=entry["output"]))
 
