@@ -5,7 +5,7 @@ description = "Ollama integration example using the Orchael SDK"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "orchael-sdk @ file:///Users/mark/src/everydaydevops/orchael-sdk/orchael-sdk",
+    "orchael-sdk @ {root:uri}/../../orchael-sdk",
     "requests>=2.25.0",
     "langchain>=0.1.0",
     "langchain-core>=0.1.0",
