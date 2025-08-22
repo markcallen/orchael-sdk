@@ -1,4 +1,4 @@
-processor_class: examples.echo.echo_processor.EchoChatProcessor
+processor_class: echo_processor.EchoChatProcessor
 env:
   ECHO_PREFIX: "Echo (custom): "
   ECHO_UPPERCASE: "true"

@@ -27,6 +27,10 @@ def load_processor_class(class_path: str) -> Type[OrchaelChatProcessor]:
         module = importlib.import_module(module_name)
         processor_class = getattr(module, class_name)
 
+        # Check if the attribute is actually a class
+        if not isinstance(processor_class, type):
+            raise AttributeError(f"'{class_name}' is not a class")
+
         if not issubclass(processor_class, OrchaelChatProcessor):
             raise ValueError(
                 f"Class {class_path} does not inherit from OrchaelChatProcessor"

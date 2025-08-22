@@ -8,6 +8,35 @@ This example demonstrates how to use the Orchael SDK with Ollama, including the 
 - **Ollama Integration**: Uses LangChain to interact with Ollama models
 - **Chat History**: Maintains conversation history
 - **Configurable Parameters**: Model, URL, and temperature can be set via config
+- **NEW**: Includes comprehensive test suite
+
+## Project Structure
+
+```
+examples/ollama/
+├── ollama_processor.py
+├── config.yaml
+├── tests/
+│   ├── __init__.py
+│   └── test_ollama_processor.py
+├── pyproject.toml
+├── README.md
+└── test_env.py
+```
+
+## Installation
+
+### From the examples directory
+```bash
+cd examples/ollama
+uv install
+```
+
+### With test dependencies
+```bash
+cd examples/ollama
+uv install --dev
+```
 
 ## Configuration
 
@@ -34,11 +63,15 @@ The following environment variables are automatically set from the config:
 ### Using the CLI
 
 ```bash
+# From the project root
+cd orchael-sdk
+uv install
+
 # Process a chat input
-python -m orchael_sdk.cli --config config.yaml --input "What is machine learning?"
+uv run python orchael_sdk_cli.py --config examples/ollama/config.yaml --input "What is machine learning?"
 
 # Show chat history
-python -m orchael_sdk.cli --config config.yaml --history
+uv run python orchael_sdk_cli.py --config examples/ollama/config.yaml --history
 ```
 
 ### Using the SDK directly
@@ -64,8 +97,26 @@ Run the test script to see environment variables being set:
 
 ```bash
 cd examples/ollama
-python test_env.py
+uv install
+uv run python test_env.py
 ```
+
+## Testing
+
+Run the test suite for this example:
+
+```bash
+cd examples/ollama
+uv install --dev
+uv run pytest
+```
+
+The tests cover:
+- Default configuration behavior
+- Custom host configuration
+- Custom model configuration
+- Interface compliance verification
+- History initialization
 
 ## How It Works
 
@@ -88,3 +139,9 @@ env:
 ```
 
 All values are automatically converted to strings and set as environment variables.
+
+## Dependencies
+
+- orchael-sdk (from parent directory)
+- requests>=2.25.0
+- Python 3.10+
