@@ -18,7 +18,7 @@ class EchoChatProcessor(OrchaelChatProcessor):
         self.uppercase = os.getenv("ECHO_UPPERCASE", "false").lower() == "true"
         self.repeat_count = int(os.getenv("ECHO_REPEAT_COUNT", "1"))
 
-        print(f"Echo processor initialized with:")
+        print("Echo processor initialized with:")
         print(f"  Prefix: '{self.prefix}'")
         print(f"  Uppercase: {self.uppercase}")
         print(f"  Repeat count: {self.repeat_count}")

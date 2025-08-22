@@ -6,7 +6,6 @@ CLI for Orchael SDK
 import importlib
 import os
 import sys
-from pathlib import Path
 from typing import Type, Dict, Any, cast
 
 import click
@@ -18,7 +17,7 @@ except ImportError:
     sys.exit(1)
 
 from .orchael_chat_processor import OrchaelChatProcessor
-from .chat_types import ChatInput, ChatOutput
+from .chat_types import ChatInput
 
 
 def load_processor_class(class_path: str) -> Type[OrchaelChatProcessor]:

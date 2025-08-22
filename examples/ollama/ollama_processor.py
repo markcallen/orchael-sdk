@@ -6,9 +6,8 @@ import os
 from typing import List
 from orchael_sdk import OrchaelChatProcessor, ChatInput, ChatOutput, ChatHistoryEntry
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_ollama import ChatOllama
-from langchain_core.runnables import RunnableSequence
 
 
 class OllamaChatProcessor(OrchaelChatProcessor):
@@ -47,25 +46,25 @@ class OllamaChatProcessor(OrchaelChatProcessor):
     def process_chat(self, chat_input: ChatInput) -> ChatOutput:
         # Convert history to LangChain message format
         messages = []
-        if chat_input.history:
-            for entry in chat_input.history:
+        if chat_input.get("history"):
+            for entry in chat_input["history"]:
                 messages.append(HumanMessage(content=entry["input"]))
                 messages.append(AIMessage(content=entry["output"]))
 
         # Add current question
-        messages.append(HumanMessage(content=chat_input.input))
+        messages.append(HumanMessage(content=chat_input["input"]))
 
         # Get response from the model
         ai_response = self.chain.invoke(
-            {"history": messages[:-1], "input": chat_input.input}
+            {"history": messages[:-1], "input": chat_input["input"]}
         )
         answer = getattr(ai_response, "content", str(ai_response))
 
         # Create output
-        output = {"input": chat_input.input, "output": answer}
+        output = ChatOutput(input=chat_input["input"], output=answer)
 
         # Add to history
-        self._history.append({"input": chat_input.input, "output": answer})
+        self._history.append({"input": chat_input["input"], "output": answer})
 
         return output
 
