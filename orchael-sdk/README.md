@@ -17,13 +17,7 @@ A framework for building chat processors and chat applications in Python.
 
 ```bash
 cd orchael-sdk
-uv install
-```
-
-### Development Installation
-
-```bash
-uv install -e .
+uv sync
 ```
 
 ## Quick Start
@@ -148,7 +142,7 @@ The SDK includes several examples in the parent `examples/` directory:
 ### Setup
 
 ```bash
-uv install --dev
+uv sync --dev
 ```
 
 ### Testing
