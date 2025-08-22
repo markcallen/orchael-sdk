@@ -1,0 +1,5 @@
+processor_class: examples.echo.echo_processor.EchoChatProcessor
+env:
+  ECHO_PREFIX: "Echo (custom): "
+  ECHO_UPPERCASE: "true"
+  ECHO_REPEAT_COUNT: "2"
