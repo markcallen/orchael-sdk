@@ -29,13 +29,13 @@ examples/ollama/
 ### From the examples directory
 ```bash
 cd examples/ollama
-uv install
+uv sync
 ```
 
 ### With test dependencies
 ```bash
 cd examples/ollama
-uv install --dev
+uv sync --dev
 ```
 
 ## Configuration
@@ -68,37 +68,10 @@ cd orchael-sdk
 uv install
 
 # Process a chat input
-uv run python orchael_sdk_cli.py --config examples/ollama/config.yaml --input "What is machine learning?"
+uv run orchael-sdk-cli --config config.yaml --input "What is machine learning?"
 
 # Show chat history
-uv run python orchael_sdk_cli.py --config examples/ollama/config.yaml --history
-```
-
-### Using the SDK directly
-
-```python
-from orchael_sdk import set_env_vars_from_config
-import yaml
-
-# Load config and set environment variables
-with open('config.yaml', 'r') as f:
-    config = yaml.safe_load(f)
-
-set_env_vars_from_config(config)
-
-# Now environment variables are available
-import os
-print(os.getenv('OLLAMA_URL'))  # http://localhost:11434
-```
-
-### Testing Environment Variables
-
-Run the test script to see environment variables being set:
-
-```bash
-cd examples/ollama
-uv install
-uv run python test_env.py
+uv run orchael-sdk-cli --config config.yaml --history
 ```
 
 ## Testing
@@ -107,7 +80,7 @@ Run the test suite for this example:
 
 ```bash
 cd examples/ollama
-uv install --dev
+uv sync --dev
 uv run pytest
 ```
 

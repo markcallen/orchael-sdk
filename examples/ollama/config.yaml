@@ -1,6 +1,5 @@
-processor_class: examples.ollama.ollama_processor.OllamaChatProcessor
+processor_class: ollama_processor.OllamaChatProcessor
 env:
   OLLAMA_URL: "http://localhost:11434"
   OLLAMA_MODEL: "qwen3:0.6b"
   OLLAMA_TEMPERATURE: "0.7"
-
