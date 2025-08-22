@@ -15,14 +15,7 @@ This repository contains:
 
 ```bash
 cd orchael-sdk
-uv install
-```
-
-### Development Installation
-
-```bash
-cd orchael-sdk
-uv install -e .
+uv sync
 ```
 
 ### Run Examples
@@ -30,13 +23,20 @@ uv install -e .
 ```bash
 # Echo example
 cd examples/echo
-uv install
-uv run python -m echo_processor.echo_chat_processor
+uv sync
+uv run orchael-sdk-cli --config config.yaml --input "Hello World"
+```
 
+```
 # Ollama example
 cd examples/ollama
-uv install
-uv run python ollama_processor.py
+uv sync
+```
+
+Edit the `config.yaml` and use your ollama server and model
+
+```
+uv run orchael-sdk-cli --config config.yaml --input "What is machine learning?"
 ```
 
 ## Documentation
@@ -51,11 +51,10 @@ uv run python ollama_processor.py
 
 ```bash
 cd orchael-sdk
-uv install --dev
+uv sync --dev
 uv run pytest
 uv run black .
 uv run ruff check .
-uv run mypy .
 ```
 
 ### Example Development
