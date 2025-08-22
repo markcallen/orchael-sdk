@@ -43,54 +43,21 @@ uv install --dev
 
 ### CLI Usage
 
-**Method 1: Run from project root (recommended)**
 ```bash
 # From the project root directory
 cd orchael-sdk
-uv install
+uv sync
 
 # Go to the echo example directory and install dependencies
 cd examples/echo
-uv install
+uv sync
 
 # Run the echo processor using the CLI
 cd ../..
-uv run python orchael-sdk/orchael_sdk_cli.py --config examples/echo/config.yaml --input "Hello World"
+uv run orchael-sdk-cli --config config.yaml --input "Hello World"
 
 # Show chat history (note: each CLI call creates a new processor instance)
-uv run python orchael-sdk/orchael_sdk_cli.py --config examples/echo/config.yaml --history
-```
-
-**Method 2: Run from echo example directory**
-```bash
-# From the echo example directory
-cd examples/echo
-uv install
-
-# Run the echo processor using the CLI
-cd ..
-uv run python orchael-sdk/orchael_sdk_cli.py --config echo/config.yaml --input "Hello World"
-
-# Show chat history (note: each CLI call creates a new processor instance)
-uv run python orchael-sdk/orchael_sdk_cli.py --config echo/config.yaml --history
-```
-
-### Direct Usage
-
-```python
-from echo_processor import EchoChatProcessor
-from orchael_sdk import ChatInput
-
-# Create processor
-processor = EchoChatProcessor()
-
-# Process chat
-result = processor.process_chat(ChatInput(
-    input="Hello!",
-    history=[]
-))
-
-print(result['output'])  # "Echo: Hello!"
+uv run orchael-sdk-cli --config config.yaml --history
 ```
 
 ## Testing

@@ -5,13 +5,7 @@ description = "Echo example implementation using the Orchael SDK"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "orchael-sdk @ file:///Users/mark/src/everydaydevops/orchael-sdk/orchael-sdk"
-]
-
-[project.optional-dependencies]
-test = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
+    "orchael-sdk @ {root:uri}/../../orchael-sdk"
 ]
 
 [build-system]
@@ -30,3 +24,9 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+]
