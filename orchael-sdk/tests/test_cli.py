@@ -11,7 +11,7 @@ from orchael_sdk.cli import (
     load_processor_class,
     load_config,
     set_env_vars_from_config,
-    main,
+    cli,
 )
 from orchael_sdk.orchael_chat_processor import OrchaelChatProcessor
 from orchael_sdk.chat_types import ChatInput, ChatOutput, ChatHistoryEntry
@@ -222,52 +222,52 @@ class TestSetEnvVarsFromConfig:
         set_env_vars_from_config(config)
 
 
-class TestCLIMain:
-    """Test main CLI function"""
+class TestCLIGroup:
+    """Test CLI group function"""
 
-    def test_main_help_option(self) -> None:
+    def test_cli_help_option(self) -> None:
         """Test that the CLI responds to --help option"""
         from click.testing import CliRunner
 
         runner = CliRunner()
 
-        result = runner.invoke(main, ["--help"])
+        result = runner.invoke(cli, ["--help"])
 
         assert result.exit_code == 0
         assert "Usage:" in result.output
-        assert "--config" in result.output
-        assert "--input" in result.output
-        assert "--history" in result.output
+        assert "chat" in result.output
+        assert "server" in result.output
 
-    def test_main_version_option(self) -> None:
+    def test_cli_version_option(self) -> None:
         """Test that the CLI responds to --version option"""
         from click.testing import CliRunner
 
         runner = CliRunner()
 
-        result = runner.invoke(main, ["--version"])
+        result = runner.invoke(cli, ["--version"])
 
         # Should either show version or help (depending on Click version)
         assert result.exit_code in [0, 2]
 
-    def test_main_invalid_option(self) -> None:
+    def test_cli_invalid_option(self) -> None:
         """Test that the CLI handles invalid options gracefully"""
         from click.testing import CliRunner
 
         runner = CliRunner()
 
-        result = runner.invoke(main, ["--invalid-option"])
+        result = runner.invoke(cli, ["--invalid-option"])
 
         # Should exit with error code
         assert result.exit_code != 0
 
-    def test_main_no_args(self) -> None:
+    def test_cli_no_args(self) -> None:
         """Test that the CLI handles no arguments gracefully"""
         from click.testing import CliRunner
 
         runner = CliRunner()
 
-        result = runner.invoke(main, [])
+        result = runner.invoke(cli, [])
 
-        # Should exit with error code (missing required input)
-        assert result.exit_code != 0
+        # Should show help when no args provided (Click exits with 2 for help)
+        assert result.exit_code == 2
+        assert "Usage:" in result.output

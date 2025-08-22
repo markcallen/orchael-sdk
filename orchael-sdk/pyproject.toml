@@ -41,7 +41,7 @@ dev = [
 
 [project.scripts]
 orchael-sdk-cli = "orchael_sdk.cli:main"
-orchael-sdk-server = "orchael_sdk_cli_server:main"
+orchael-sdk-server = "orchael_sdk.cli:server"
 
 [build-system]
 requires = ["hatchling"]
@@ -53,9 +53,6 @@ packages = ["orchael_sdk"]
 [tool.hatch.build.targets.sdist]
 include = [
     "/orchael_sdk",
-    "/example",
-    "/example2",
-    "/examples",
     "/README.md",
     "/pyproject.toml"
 ]

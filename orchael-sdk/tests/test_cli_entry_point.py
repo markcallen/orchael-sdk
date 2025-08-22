@@ -111,11 +111,11 @@ class TestCLIEntryPoint:
 
     def test_script_help_option_click_runner(self) -> None:
         """Test that the script responds to --help option using Click's test runner"""
-        from orchael_sdk_cli import main  # type: ignore[attr-defined]
+        from orchael_sdk.cli import cli
         from click.testing import CliRunner
 
         runner = CliRunner()
-        result = runner.invoke(main, ["--help"])
+        result = runner.invoke(cli, ["--help"])
 
         # Should exit successfully with help text
         assert result.exit_code == 0
@@ -123,11 +123,9 @@ class TestCLIEntryPoint:
 
     def test_script_imports_correct_function(self) -> None:
         """Test that the script imports the correct function from orchael_sdk.cli"""
-        # Import the entry point script
-        import orchael_sdk_cli
-
         # Import the actual CLI function
-        from orchael_sdk.cli import main as cli_main
+        from orchael_sdk.cli import cli
 
-        # Verify they point to the same function
-        assert orchael_sdk_cli.main is cli_main
+        # Verify the CLI function exists and is callable
+        assert callable(cli)
+        assert hasattr(cli, "commands")

@@ -70,7 +70,10 @@ def load_processor_class(class_path: str) -> Type[OrchaelChatProcessor]:
 def load_config(config_file: str = "config.yaml") -> Dict[str, Any]:
     """Load configuration from YAML file"""
     try:
-        with open(config_file, "r") as f:
+        # Use environment variable if set, otherwise use the default parameter
+        config_path = os.getenv("ORCHAEL_CONFIG_FILE", config_file)
+
+        with open(config_path, "r") as f:
             config = yaml.safe_load(f)
 
         if not config or "processor_class" not in config:
@@ -78,7 +81,7 @@ def load_config(config_file: str = "config.yaml") -> Dict[str, Any]:
 
         return cast(Dict[str, Any], config)
     except (FileNotFoundError, yaml.YAMLError, ValueError) as e:
-        raise ValueError(f"Error loading config file {config_file}: {e}")
+        raise ValueError(f"Error loading config file {config_path}: {e}")
 
 
 def set_env_vars_from_config(config: Dict[str, Any]) -> None:

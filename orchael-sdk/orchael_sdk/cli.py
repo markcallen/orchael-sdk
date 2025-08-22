@@ -36,7 +36,7 @@ def load_processor_class(class_path: str) -> Type[OrchaelChatProcessor]:
                 f"Class {class_path} does not inherit from OrchaelChatProcessor"
             )
 
-        return cast(Type[OrchaelChatProcessor], processor_class)
+        return processor_class
     except (ImportError, AttributeError, ValueError) as e:
         click.echo(f"Error loading processor class {class_path}: {e}", err=True)
         sys.exit(1)
@@ -67,7 +67,13 @@ def set_env_vars_from_config(config: Dict[str, Any]) -> None:
                 click.echo(f"Set environment variable: {key}={value}", err=True)
 
 
-@click.command()
+@click.group()
+def cli() -> None:
+    """Orchael SDK CLI"""
+    pass
+
+
+@cli.command()
 @click.option(
     "--config",
     "-c",
@@ -78,8 +84,8 @@ def set_env_vars_from_config(config: Dict[str, Any]) -> None:
     "--input", "-i", help="Input text to process (required unless --history is used)"
 )
 @click.option("--history", is_flag=True, help="Show chat history")
-def main(config: str, input: str, history: bool) -> None:
-    """Orchael SDK CLI"""
+def chat(config: str, input: str, history: bool) -> None:
+    """Process chat input or show history"""
 
     # Load configuration
     config_data = load_config(config)
@@ -125,5 +131,49 @@ def main(config: str, input: str, history: bool) -> None:
         sys.exit(1)
 
 
+@cli.command()
+@click.option(
+    "--host", "-h", default="0.0.0.0", help="Host to bind to (default: 0.0.0.0)"
+)
+@click.option(
+    "--port", "-p", default=8000, type=int, help="Port to bind to (default: 8000)"
+)
+@click.option(
+    "--config",
+    "-c",
+    default="config.yaml",
+    help="Path to YAML configuration file (default: config.yaml)",
+)
+def server(host: str, port: int, config: str) -> None:
+    """Run the Orchael SDK FastAPI server"""
+
+    # Check if config file exists
+    if not os.path.exists(config):
+        click.echo(f"Error: Config file {config} not found", err=True)
+        click.echo(
+            "Please create a config.yaml file with the 'processor_class' field",
+            err=True,
+        )
+        return
+
+    click.echo(f"Starting Orchael SDK server on {host}:{port}")
+    click.echo(f"Using config file: {config}")
+    click.echo("Press Ctrl+C to stop the server")
+
+    try:
+        from .server import run_server
+
+        run_server(host=host, port=port, config_file=config)
+    except KeyboardInterrupt:
+        click.echo("\nServer stopped by user")
+    except Exception as e:
+        click.echo(f"Error starting server: {e}", err=True)
+
+
+def main() -> None:
+    """Main entry point for backward compatibility"""
+    cli()
+
+
 if __name__ == "__main__":
-    main()
+    cli()
