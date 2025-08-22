@@ -1,0 +1,9 @@
+---
+globs: **/*.py
+alwaysApply: false
+---
+- this is a python 3.10 project
+- always run `uv run black {filename}` when ever a file is created or changed
+- always run `uv run ruff check {filename}` when ever a file is created or changed
+- always run `uv run mypy {filename}` when ever a file is created or changed
+- always run `uv run pytest`

@@ -1,13 +1,28 @@
-# Installation Guide
+# AGENTS.md
 
-## Prerequisites
+## 📦 Project Overview
+
+**Orchael-SDK** is a Python library providing access to the Orchael agent world
+
+- **Repository:** [markcallen/orchael-sdk](https://github.com/markcallen/orchael-sdk)
+- **Primary Language:** Python 3.10+
+- **Test Framework:** `pytest`
+- **Formatting** `black`
+- **Linting:** `ruff`
+- **Type Checking:** `mypy`
+- **CI:** GitHub Actions (matrix for backends/OS with Dockerized services)
+- **Issue Tracking:** GitHub Issues
+
+## 🚦 Quick Start
+
+1. **Prerequisites:**
 
 - Python 3.10 or higher
 - `uv` package manager (recommended) or `pip`
 
-## Installation Options
+2. Installation Options
 
-### 1. From Source (Development)
+2.1. From Source (Development)
 
 ```bash
 git clone <repository-url>
@@ -15,7 +30,7 @@ cd orchael-sdk
 uv install -e .
 ```
 
-### 2. From Built Package
+2.2 From Built Package
 
 ```bash
 # Install from the built wheel
@@ -25,13 +40,13 @@ uv pip install dist/orchael_sdk-0.1.0-py3-none-any.whl
 uv pip install dist/orchael_sdk-0.1.0.tar.gz
 ```
 
-### 3. Using pip
+2.3 Using pip
 
 ```bash
 pip install .
 ```
 
-## Building the Package
+3 Building the Package
 
 To build distributable packages:
 
@@ -65,14 +80,14 @@ uv run mypy .
 
 ## Examples
 
-See the `example3/` directory for a working example of how to use the SDK.
+See the `examples/echo` directory for a working example of how to use the SDK.
 
 ## Package Structure
 
 ```
 orchael_sdk/
-├── __init__.py              # Main package exports
-├── chat_types.py            # Chat data structures
+├── __init__.py               # Main package exports
+├── chat_types.py             # Chat data structures
 ├── orchael_chat_processor.py # Abstract base class
-└── py.typed                 # Type checking support
+└── py.typed                  # Type checking support
 ```
