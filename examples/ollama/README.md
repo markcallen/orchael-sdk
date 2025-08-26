@@ -68,10 +68,10 @@ cd orchael-sdk
 uv install
 
 # Process a chat input
-uv run orchael-sdk-cli --config config.yaml --input "What is machine learning?"
+uv run orchael-sdk-cli chat --config config.yaml --input "What is machine learning?"
 
 # Show chat history
-uv run orchael-sdk-cli --config config.yaml --history
+uv run orchael-sdk-cli chat --config config.yaml --history
 ```
 
 ## Testing

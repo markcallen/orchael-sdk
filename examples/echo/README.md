@@ -30,13 +30,7 @@ examples/echo/
 ### From the examples directory
 ```bash
 cd examples/echo
-uv install
-```
-
-### With test dependencies
-```bash
-cd examples/echo
-uv install --dev
+uv sync
 ```
 
 ## Usage
@@ -53,10 +47,10 @@ cd examples/echo
 uv sync
 
 # Run the echo processor using the CLI
-uv run orchael-sdk-cli --config config.yaml --input "Hello World"
+uv run orchael-sdk-cli chat --config config.yaml --input "Hello World"
 
 # Show chat history (note: each CLI call creates a new processor instance)
-uv run orchael-sdk-cli --config config.yaml --history
+uv run orchael-sdk-cli chat --config config.yaml --history
 ```
 
 ## Testing
