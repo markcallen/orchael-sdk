@@ -4,12 +4,7 @@ Tests for the FastAPI server
 
 import pytest
 from unittest.mock import MagicMock, patch
-
-# Type ignore for missing stubs - these are test dependencies
-try:
-    from fastapi.testclient import TestClient  # type: ignore[import-not-found]
-except ImportError:
-    TestClient = None  # type: ignore[assignment]
+from fastapi.testclient import TestClient
 
 from orchael_sdk.server import app
 
@@ -17,13 +12,13 @@ from orchael_sdk.server import app
 class MockProcessor:
     """Mock processor for testing"""
 
-    def process_chat(self, chat_input: dict) -> dict:
+    def process_chat(self, chat_input: dict) -> dict:  # type: ignore[type-arg]
         return {
             "input": chat_input["input"],
             "output": f"Mock response to: {chat_input['input']}",
         }
 
-    def get_history(self) -> list[dict] | None:
+    def get_history(self) -> list[dict] | None:  # type: ignore[type-arg]
         return [
             {"input": "test input 1", "output": "test output 1"},
             {"input": "test input 2", "output": "test output 2"},

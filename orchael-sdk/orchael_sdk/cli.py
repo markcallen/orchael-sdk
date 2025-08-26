@@ -11,7 +11,7 @@ from typing import Type, Dict, Any, cast
 import click
 
 try:
-    import yaml  # type: ignore[import-untyped]
+    import yaml
 except ImportError:
     click.echo("Error: PyYAML is required. Install with: pip install PyYAML", err=True)
     sys.exit(1)

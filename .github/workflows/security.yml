@@ -1,0 +1,112 @@
+name: Security and Dependencies
+
+on:
+  schedule:
+    # Run weekly on Mondays at 9 AM UTC
+    - cron: '0 9 * * 1'
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: |
+          cd orchael-sdk
+          uv sync --dev
+
+      - name: Run safety check
+        run: |
+          cd orchael-sdk
+          uv run safety check || echo "Safety check failed or not installed"
+        continue-on-error: true
+
+      - name: Run bandit security scan
+        run: |
+          cd orchael-sdk
+          uv run bandit -r orchael_sdk/ -f json -o bandit-report.json || true
+
+      - name: Upload bandit results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-scan-results
+          path: orchael-sdk/bandit-report.json
+
+  dependency-update:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          version: "latest"
+
+      - name: Check for outdated dependencies
+        run: |
+          cd orchael-sdk
+          uv run uv outdated
+
+      - name: Create dependency update issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['dependencies']
+            });
+
+            const existingIssue = issues.find(issue =>
+              issue.title.includes('Dependency Updates Available')
+            );
+
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'Dependency Updates Available',
+                body: `## Dependency Updates
+
+                Some dependencies in the Orchael SDK have updates available. Please review and update them as needed.
+
+                ### To update dependencies:
+                1. Run \`uv outdated\` to see what's available
+                2. Update dependencies with \`uv add package@version\`
+                3. Test thoroughly after updates
+                4. Update \`pyproject.toml\` if needed
+
+                ### Note:
+                - This issue was automatically created by the security workflow
+                - Close this issue once dependencies are updated
+                - Consider creating a PR for the updates`,
+                labels: ['dependencies', 'automated', 'maintenance']
+              });
+            }

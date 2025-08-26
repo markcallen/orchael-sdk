@@ -30,3 +30,5 @@ repos:
     rev: v1.16.1
     hooks:
       - id: mypy
+        args: [--strict, --ignore-missing-imports, --disable-error-code=misc]
+        additional_dependencies: [types-pyyaml==6.0.12.20250822]

@@ -5,14 +5,14 @@ FastAPI server for Orchael SDK
 
 import importlib
 import os
-from typing import Type, Dict, Any, cast, List
+from typing import Type, Dict, Any, cast, List, Optional
 
-from fastapi import FastAPI, HTTPException  # type: ignore[import-not-found]
-from pydantic import BaseModel  # type: ignore[import-not-found]
-import uvicorn  # type: ignore[import-not-found]
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import uvicorn
 
 try:
-    import yaml  # type: ignore[import-untyped]
+    import yaml
 except ImportError:
     raise ImportError("PyYAML is required. Install with: pip install PyYAML")
 
@@ -94,7 +94,7 @@ def set_env_vars_from_config(config: Dict[str, Any]) -> None:
 
 
 # Global processor instance
-processor: OrchaelChatProcessor | None = None
+processor: Optional[OrchaelChatProcessor] = None
 
 
 def get_processor() -> OrchaelChatProcessor:
