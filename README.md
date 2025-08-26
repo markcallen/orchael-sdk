@@ -27,7 +27,7 @@ uv sync
 uv run orchael-sdk-cli --config config.yaml --input "Hello World"
 ```
 
-```
+```bash
 # Ollama example
 cd examples/ollama
 uv sync
@@ -35,8 +35,14 @@ uv sync
 
 Edit the `config.yaml` and use your ollama server and model
 
-```
+```bash
 uv run orchael-sdk-cli --config config.yaml --input "What is machine learning?"
+```
+
+### Develop new agent
+
+```bash
+uv init -p 3.12
 ```
 
 ## Documentation
@@ -51,7 +57,11 @@ uv run orchael-sdk-cli --config config.yaml --input "What is machine learning?"
 
 ```bash
 cd orchael-sdk
-uv sync --dev
+uv sync
+```
+
+Always check before commiting
+```bash
 uv run pytest
 uv run black .
 uv run ruff check .
@@ -63,7 +73,7 @@ Each example has its own dependencies and can be developed independently:
 
 ```bash
 cd examples/your-example
-uv install --dev
+uv sync
 # Add your own tests and development setup
 ```
 

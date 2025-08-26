@@ -1,0 +1,37 @@
+version: 2
+updates:
+  - package-ecosystem: 'pip'
+    versioning-strategy: increase
+    directory: '/orchael-sdk'
+    schedule:
+      interval: 'weekly'
+    labels:
+      - 'dependencies'
+    open-pull-requests-limit: 10
+    pull-request-branch-name:
+      separator: '-'
+    groups:
+      otel-packages:
+        patterns:
+          - "opentelemetry*"
+      sentry-packages:
+        patterns:
+          - "sentry-sdk*"
+      llama-packages:
+        patterns:
+          - "llama-*"
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'boto3'
+
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    pull-request-branch-name:
+      separator: '-'
+    labels:
+      - 'github-actions'
+      - 'dependencies'
