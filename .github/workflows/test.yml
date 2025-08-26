@@ -61,9 +61,9 @@ jobs:
     - name: Run linting
       run: |
         cd orchael-sdk
-        uv run ruff check .
         uv run black --check .
-        uv run mypy orchael_sdk
+        uv run ruff check .
+        uv run mypy .
 
     - name: Build package (verify build)
       run: |

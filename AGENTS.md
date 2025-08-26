@@ -66,7 +66,7 @@ This will create:
 
 ```bash
 # Install with development dependencies
-uv install --dev
+uv sync --dev
 
 # Run tests
 uv run pytest

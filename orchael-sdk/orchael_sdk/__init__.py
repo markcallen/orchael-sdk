@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-def set_env_vars_from_config(config: dict) -> None:
+def set_env_vars_from_config(config: dict) -> None:  # type: ignore[type-arg]
     """
     Set environment variables from the 'env' section of a config dictionary.
 
