@@ -36,7 +36,10 @@ dev = [
     "black>=23.0.0",
     "isort>=5.0.0",
     "mypy>=1.0.0",
-    "ruff>=0.1.0"
+    "ruff>=0.1.0",
+    "safety>=2.0.0",
+    "bandit>=1.7.0",
+    "build>=0.10.0"
 ]
 
 [project.scripts]
@@ -111,4 +114,7 @@ dev = [
     "types-requests>=2.31.0",
     "types-requests>=2.31.0",
     "pydantic>=2.0.0",
+    "safety>=2.0.0",
+    "bandit>=1.7.0",
+    "build>=0.10.0"
 ]
