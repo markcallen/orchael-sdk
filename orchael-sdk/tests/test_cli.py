@@ -51,7 +51,8 @@ class TestLoadProcessorClass:
             mock_import.return_value = mock_module
 
             result = load_processor_class(
-                "test_module.MockChatProcessor", "/tmp/test_config.yaml"
+                "test_module.MockChatProcessor",
+                "/tmp/test_config.yaml",
             )
 
             assert result == MockChatProcessor
@@ -96,7 +97,8 @@ class TestLoadProcessorClass:
                 )
 
                 load_processor_class(
-                    "test_module.NonexistentClass", "/tmp/test_config.yaml"
+                    "test_module.NonexistentClass",
+                    "/tmp/test_config.yaml",
                 )
 
                 mock_exit.assert_called_once_with(1)

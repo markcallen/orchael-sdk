@@ -808,7 +808,6 @@ requires-dist = [
     { name = "typing-extensions", specifier = ">=4.0.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.24.0" },
 ]
-provides-extras = ["dev"]
 
 [package.metadata.requires-dev]
 dev = [
