@@ -50,7 +50,9 @@ class TestLoadProcessorClass:
             mock_module.MockChatProcessor = MockChatProcessor
             mock_import.return_value = mock_module
 
-            result = load_processor_class("test_module.MockChatProcessor")
+            result = load_processor_class(
+                "test_module.MockChatProcessor", "/tmp/test_config.yaml"
+            )
 
             assert result == MockChatProcessor
             mock_exit.assert_not_called()
@@ -66,7 +68,7 @@ class TestLoadProcessorClass:
             )
             mock_import.return_value = mock_module
 
-            load_processor_class("test_module.InvalidClass")
+            load_processor_class("test_module.InvalidClass", "/tmp/test_config.yaml")
 
             mock_exit.assert_called_once_with(1)
 
@@ -76,7 +78,7 @@ class TestLoadProcessorClass:
         with patch("orchael_sdk.cli.importlib.import_module") as mock_import:
             mock_import.side_effect = ImportError("No module named 'nonexistent'")
 
-            load_processor_class("nonexistent.Class")
+            load_processor_class("nonexistent.Class", "/tmp/test_config.yaml")
 
             mock_exit.assert_called_once_with(1)
 
@@ -93,7 +95,9 @@ class TestLoadProcessorClass:
                     "module has no attribute 'NonexistentClass'"
                 )
 
-                load_processor_class("test_module.NonexistentClass")
+                load_processor_class(
+                    "test_module.NonexistentClass", "/tmp/test_config.yaml"
+                )
 
                 mock_exit.assert_called_once_with(1)
 

@@ -20,9 +20,16 @@ from .orchael_chat_processor import OrchaelChatProcessor
 from .chat_types import ChatInput
 
 
-def load_processor_class(class_path: str) -> Type[OrchaelChatProcessor]:
+def load_processor_class(
+    class_path: str, config_file: str
+) -> Type[OrchaelChatProcessor]:
     """Dynamically load a processor class from a string path like 'module.ClassName'"""
     try:
+        # Add the config file's directory to Python path to enable relative imports
+        config_dir = os.path.dirname(os.path.abspath(config_file))
+        if config_dir not in sys.path:
+            sys.path.insert(0, config_dir)
+
         module_name, class_name = class_path.rsplit(".", 1)
         module = importlib.import_module(module_name)
         processor_class = getattr(module, class_name)
@@ -95,7 +102,7 @@ def chat(config: str, input: str, history: bool) -> None:
     set_env_vars_from_config(config_data)
 
     # Load processor class
-    processor_class = load_processor_class(processor_class_path)
+    processor_class = load_processor_class(processor_class_path, config)
 
     # Create processor instance
     try:
