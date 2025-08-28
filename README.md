@@ -39,10 +39,68 @@ Edit the `config.yaml` and use your ollama server and model
 uv run orchael-sdk-cli --config config.yaml --input "What is machine learning?"
 ```
 
-### Develop new agent
+### Develop a new agent
 
 ```bash
-uv init -p 3.12
+python3 -m venv .venv
+pip install "git+https://github.com/markcallen/orchael-sdk.git#egg=orchael-sdk&subdirectory=orchael-sdk" && pip freeze > requirements.txt
+```
+
+Create a module
+
+```bash
+mkdir echo_chat_processor
+cd echo_chat_processor
+```
+
+Add a module file `__init__.py`
+
+```python
+# Echo processor package
+from .echo_chat_processor import EchoChatProcessor
+
+__all__ = ["EchoChatProcessor"]
+```
+
+Create a class the implements OrchaelChatProcessor
+
+```python
+from typing import List
+from orchael_sdk import OrchaelChatProcessor, ChatInput, ChatOutput, ChatHistoryEntry
+
+
+class EchoChatProcessor(OrchaelChatProcessor):
+    """Simple echo processor that repeats input and demonstrates environment variable usage"""
+
+    def __init__(self) -> None:
+        pass
+
+    def process_chat(self, chat_input: ChatInput) -> ChatOutput:
+        input_text = chat_input["input"]
+
+        # Apply transformations based on environment variables
+        output_text = input_text
+
+        # Create output
+        output = ChatOutput(input=input_text, output=output_text)
+
+        return output
+
+    def get_history(self) -> List[ChatHistoryEntry]:
+        pass
+
+```
+
+Register this in the `config.yaml` in the root directory
+
+```yaml
+processor_class: EchoChatProcessor
+```
+
+Now run using the `orchael-sdk-cli`
+
+```bash
+uv run orchael-sdk-cli chat --config config.yaml --input "hellow"
 ```
 
 ## Documentation
