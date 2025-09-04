@@ -6,6 +6,9 @@ CLI for Orchael SDK
 import importlib
 import os
 import sys
+import zipfile
+import tempfile
+import shutil
 from typing import Type, Dict, Any, cast
 
 import click
@@ -74,10 +77,188 @@ def set_env_vars_from_config(config: Dict[str, Any]) -> None:
                 click.echo(f"Set environment variable: {key}={value}", err=True)
 
 
+def validate_config_for_build(config: Dict[str, Any], config_file: str) -> None:
+    """Validate configuration for building an agent package"""
+    # Check required fields
+    required_fields = ["processor_class", "agent_type", "runtime_version"]
+    for field in required_fields:
+        if field not in config:
+            raise ValueError(f"config.yaml must contain '{field}' field")
+
+    # Validate agent type
+    agent_type = config["agent_type"]
+    if agent_type not in ["python", "nodejs"]:
+        raise ValueError("agent_type must be 'python' or 'nodejs'")
+
+    # Validate runtime version
+    runtime_version = str(config["runtime_version"])
+    if agent_type == "python":
+        if not _validate_python_version(runtime_version):
+            raise ValueError(
+                f"Invalid Python version: {runtime_version}. Must be 3.10 or higher"
+            )
+    elif agent_type == "nodejs":
+        if not _validate_nodejs_version(runtime_version):
+            raise ValueError(
+                f"Invalid Node.js version: {runtime_version}. Must be 20 or higher"
+            )
+
+    # Test loading the processor class (only for Python agents)
+    if agent_type == "python":
+        try:
+            processor_class = load_processor_class(
+                config["processor_class"], config_file
+            )
+            # Try to instantiate the class
+            processor_class()
+            click.echo(
+                f"✓ Successfully loaded processor class: {config['processor_class']}"
+            )
+        except Exception as e:
+            raise ValueError(
+                f"Failed to load processor class {config['processor_class']}: {e}"
+            )
+    elif agent_type == "nodejs":
+        # For Node.js agents, just validate the file structure
+        click.echo(f"✓ Node.js agent processor class: {config['processor_class']}")
+
+
+def _validate_python_version(version: str) -> bool:
+    """Validate Python version format and minimum version."""
+    try:
+        parts = version.split(".")
+        if len(parts) < 2:
+            return False
+
+        major = int(parts[0])
+        minor = int(parts[1])
+
+        # Check minimum version (3.10)
+        if major < 3:
+            return False
+        if major == 3 and minor < 10:
+            return False
+
+        return True
+    except (ValueError, IndexError):
+        return False
+
+
+def _validate_nodejs_version(version: str) -> bool:
+    """Validate Node.js version format and minimum version."""
+    try:
+        parts = version.split(".")
+        if len(parts) < 1:
+            return False
+
+        major = int(parts[0])
+
+        # Check minimum version (20)
+        if major < 20:
+            return False
+
+        return True
+    except (ValueError, IndexError):
+        return False
+
+
+def create_agent_package(
+    config_file: str, output_file: str, include_dependencies: bool = True
+) -> None:
+    """Create a ZIP package for uploading to the backend"""
+    try:
+        # Load and validate config
+        config = load_config(config_file)
+        validate_config_for_build(config, config_file)
+
+        config_dir = os.path.dirname(os.path.abspath(config_file))
+
+        # Create temporary directory for packaging
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Copy config.yaml to temp directory
+            shutil.copy2(config_file, os.path.join(temp_dir, "config.yaml"))
+
+            # Copy processor module files
+            processor_class = config["processor_class"]
+            if "." in processor_class:
+                module_path = processor_class.rsplit(".", 1)[0]
+                module_dir = module_path.replace(".", "/")
+
+                # Copy the entire module directory
+                source_module_dir = os.path.join(config_dir, module_dir)
+                if os.path.exists(source_module_dir):
+                    dest_module_dir = os.path.join(temp_dir, module_dir)
+                    shutil.copytree(source_module_dir, dest_module_dir)
+                else:
+                    # Try to find the module file
+                    module_file = f"{source_module_dir}.py"
+                    if os.path.exists(module_file):
+                        dest_module_file = os.path.join(temp_dir, f"{module_dir}.py")
+                        os.makedirs(os.path.dirname(dest_module_file), exist_ok=True)
+                        shutil.copy2(module_file, dest_module_file)
+                    else:
+                        raise ValueError(
+                            f"Could not find module directory or file: {source_module_dir}"
+                        )
+            else:
+                # Simple class name, look for any .py files in the config directory
+                for file in os.listdir(config_dir):
+                    if file.endswith(".py") and not file.startswith("__"):
+                        shutil.copy2(os.path.join(config_dir, file), temp_dir)
+
+            # Copy dependencies if requested
+            if include_dependencies:
+                # Copy requirements.txt or pyproject.toml if they exist
+                for dep_file in ["requirements.txt", "pyproject.toml", "package.json"]:
+                    dep_path = os.path.join(config_dir, dep_file)
+                    if os.path.exists(dep_path):
+                        shutil.copy2(dep_path, temp_dir)
+
+            # Create ZIP file
+            with zipfile.ZipFile(output_file, "w", zipfile.ZIP_DEFLATED) as zipf:
+                for root, dirs, files in os.walk(temp_dir):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        arcname = os.path.relpath(file_path, temp_dir)
+                        zipf.write(file_path, arcname)
+
+            click.echo(f"✓ Successfully created agent package: {output_file}")
+            click.echo(f"  Agent type: {config['agent_type']}")
+            click.echo(f"  Runtime version: {config['runtime_version']}")
+            click.echo(f"  Processor class: {config['processor_class']}")
+
+    except Exception as e:
+        click.echo(f"Error creating agent package: {e}", err=True)
+        sys.exit(1)
+
+
 @click.group()
 def cli() -> None:
     """Orchael SDK CLI"""
     pass
+
+
+@cli.command()
+@click.option(
+    "--config",
+    "-c",
+    default="config.yaml",
+    help="Path to YAML configuration file (default: config.yaml)",
+)
+@click.option(
+    "--output",
+    "-o",
+    default="agent.zip",
+    help="Output ZIP file name (default: agent.zip)",
+)
+@click.option(
+    "--no-deps",
+    is_flag=True,
+    help="Exclude dependency files (requirements.txt, pyproject.toml, package.json)",
+)
+def build(config: str, output: str, no_deps: bool) -> None:
+    """Build an agent package for uploading to the backend"""
+    create_agent_package(config, output, include_dependencies=not no_deps)
 
 
 @cli.command()

@@ -1,0 +1,8 @@
+processor_class: nodejs_echo_processor.NodejsEchoProcessor
+agent_type: nodejs
+runtime_version: "20.0.0"
+name: nodejs-echo-agent
+version: 0.1.0
+description: A simple echo agent for Orchael using Node.js
+env:
+  PORT: 8000

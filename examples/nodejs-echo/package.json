@@ -1,0 +1,24 @@
+{
+  "name": "nodejs-echo-agent",
+  "version": "0.1.0",
+  "description": "A simple echo agent for Orchael using Node.js",
+  "main": "nodejs_echo_processor/index.js",
+  "scripts": {
+    "start": "node nodejs_echo_processor/index.js",
+    "test": "jest",
+    "build": "echo 'No build step required for Node.js agent'"
+  },
+  "keywords": ["orchael", "agent", "echo", "nodejs"],
+  "author": "Orchael Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
