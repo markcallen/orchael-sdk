@@ -76,7 +76,7 @@ jobs:
       - name: Check for outdated dependencies
         run: |
           cd orchael-sdk
-          uv run uv outdated
+          uv pip list --outdated
 
       - name: Create dependency update issue
         if: failure()
@@ -104,7 +104,7 @@ jobs:
                 Some dependencies in the Orchael SDK have updates available. Please review and update them as needed.
 
                 ### To update dependencies:
-                1. Run \`uv outdated\` to see what's available
+                1. Run \`uv pip list --outdated\` to see what's available
                 2. Update dependencies with \`uv add package@version\`
                 3. Test thoroughly after updates
                 4. Update \`pyproject.toml\` if needed
