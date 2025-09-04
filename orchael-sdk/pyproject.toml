@@ -31,7 +31,7 @@ dependencies = [
 
 [project.scripts]
 orchael-sdk-cli = "orchael_sdk.cli:main"
-orchael-sdk-server = "orchael_sdk.cli:server"
+orchael-sdk-server = "orchael_sdk.server:server_cli"
 
 [build-system]
 requires = ["hatchling"]
