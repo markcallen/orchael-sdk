@@ -432,6 +432,22 @@ cd orchael-sdk
 uv sync
 ```
 
+### Running Tests
+
+The SDK includes a comprehensive test runner script that executes all tests, type checking, and linting:
+
+```bash
+cd orchael-sdk
+./test-runner.sh
+```
+
+The test runner will:
+- Run unit tests with pytest
+- Generate coverage reports
+- Perform type checking with mypy
+- Run linting with ruff
+- Install any missing development dependencies automatically
+
 Always check before commiting
 ```bash
 uv run pytest
