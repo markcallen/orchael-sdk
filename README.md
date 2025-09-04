@@ -24,7 +24,7 @@ uv sync
 # Python Echo example
 cd examples/echo
 uv sync
-uv run orchael-sdk-cli --config config.yaml --input "Hello World"
+uv run orchael-sdk-cli chat --config config.yaml --input "Hello World"
 ```
 
 ```bash
@@ -332,6 +332,8 @@ uv run orchael-sdk-cli build --config config.yaml --output my-agent.zip
 # Build without dependencies
 uv run orchael-sdk-cli build --config config.yaml --output my-agent.zip --no-deps
 ```
+
+**Note**: If the output file already exists, the build command will warn you before overwriting it. You can press Ctrl+C to cancel or any key to continue.
 
 ### Build Validation
 

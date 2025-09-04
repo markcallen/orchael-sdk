@@ -162,11 +162,47 @@ def _validate_nodejs_version(version: str) -> bool:
         return False
 
 
+def _copy_tree_excluding_cache(src: str, dst: str) -> None:
+    """Copy a directory tree excluding __pycache__ directories and Python cache files"""
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+
+        if os.path.isdir(s):
+            # Skip __pycache__ directories
+            if item == "__pycache__":
+                continue
+            # Recursively copy other directories
+            _copy_tree_excluding_cache(s, d)
+        else:
+            # Skip Python cache files
+            if item.endswith((".pyc", ".pyo", ".pyd")):
+                continue
+            # Copy regular files
+            shutil.copy2(s, d)
+
+
 def create_agent_package(
     config_file: str, output_file: str, include_dependencies: bool = True
 ) -> None:
     """Create a ZIP package for uploading to the backend"""
     try:
+        # Check if output file already exists and warn user
+        if os.path.exists(output_file):
+            click.echo(
+                f"⚠️  Warning: Output file '{output_file}' already exists and will be overwritten.",
+                err=True,
+            )
+            click.echo("   Press Ctrl+C to cancel or any key to continue...", err=True)
+            try:
+                input()
+            except KeyboardInterrupt:
+                click.echo("\nBuild cancelled.", err=True)
+                sys.exit(0)
+
         # Load and validate config
         config = load_config(config_file)
         validate_config_for_build(config, config_file)
@@ -188,7 +224,8 @@ def create_agent_package(
                 source_module_dir = os.path.join(config_dir, module_dir)
                 if os.path.exists(source_module_dir):
                     dest_module_dir = os.path.join(temp_dir, module_dir)
-                    shutil.copytree(source_module_dir, dest_module_dir)
+                    # Use custom copy function to exclude __pycache__ directories
+                    _copy_tree_excluding_cache(source_module_dir, dest_module_dir)
                 else:
                     # Try to find the module file
                     module_file = f"{source_module_dir}.py"
@@ -217,7 +254,13 @@ def create_agent_package(
             # Create ZIP file
             with zipfile.ZipFile(output_file, "w", zipfile.ZIP_DEFLATED) as zipf:
                 for root, dirs, files in os.walk(temp_dir):
+                    # Remove __pycache__ directories from dirs to avoid walking into them
+                    dirs[:] = [d for d in dirs if d != "__pycache__"]
+
                     for file in files:
+                        # Skip Python cache files
+                        if file.endswith((".pyc", ".pyo", ".pyd")):
+                            continue
                         file_path = os.path.join(root, file)
                         arcname = os.path.relpath(file_path, temp_dir)
                         zipf.write(file_path, arcname)

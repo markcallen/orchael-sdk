@@ -55,8 +55,10 @@ curl http://localhost:8000/history
 ```bash
 # From the orchael-sdk directory
 cd orchael-sdk
-uv run orchael-sdk-cli build --config examples/nodejs-echo/config.yaml --output nodejs-echo-agent.zip
+uv run orchael-sdk-cli build --config ../examples/nodejs-echo/config.yaml --output nodejs-echo-agent.zip
 ```
+
+**Note**: If the output file already exists, the build command will warn you before overwriting it. You can press Ctrl+C to cancel or any key to continue.
 
 ### Manual Build
 
