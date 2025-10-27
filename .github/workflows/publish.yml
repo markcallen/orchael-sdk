@@ -138,7 +138,7 @@ jobs:
           version: "latest"
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: dist
           path: orchael-sdk/dist/
